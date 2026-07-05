@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
+import com.manage_and_book_badminton.service.CloudinaryService;
 
 @Service
 public class CourtService {
@@ -20,6 +22,9 @@ public class CourtService {
 
     @Autowired
     private CourtImageRepository courtImageRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     public CourtDTO createCourt(CreateCourtRequest request) {
         Court court = Court.builder()
@@ -52,6 +57,22 @@ public class CourtService {
         Court court = courtRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Court not found"));
         return mapToDTO(court);
+    }
+
+    public CourtDTO addCourtImage(Long courtId, MultipartFile file) {
+        try {
+            Court court = courtRepository.findById(courtId)
+                    .orElseThrow(() -> new RuntimeException("Court not found"));
+            String imageUrl = cloudinaryService.uploadImage(file);
+            CourtImage courtImage = CourtImage.builder()
+                    .court(court)
+                    .imageUrl(imageUrl)
+                    .build();
+            courtImageRepository.save(courtImage);
+            return mapToDTO(court);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload image: " + e.getMessage());
+        }
     }
 
     private CourtDTO mapToDTO(Court court) {

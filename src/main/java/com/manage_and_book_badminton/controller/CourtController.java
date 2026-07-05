@@ -40,4 +40,11 @@ public class CourtController {
         CourtDTO courtDTO = courtService.createCourt(request);
         return new ResponseEntity<>(new ResponseDTO<>(true, "Court created successfully", courtDTO, 201, LocalDateTime.now().toString()), HttpStatus.CREATED);
     }
+
+    // Manager endpoint to upload an image for a specific court
+    @PostMapping(value = "/manager/courts/{id}/images", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDTO<CourtDTO>> uploadCourtImage(@PathVariable Long id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        CourtDTO courtDTO = courtService.addCourtImage(id, file);
+        return ResponseEntity.ok(new ResponseDTO<>(true, "Court image uploaded and saved successfully", courtDTO, 200, LocalDateTime.now().toString()));
+    }
 }

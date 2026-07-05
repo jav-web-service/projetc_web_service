@@ -18,7 +18,7 @@ public class UploadController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseDTO<Object>> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
             String imageUrl = cloudinaryService.uploadImage(file);

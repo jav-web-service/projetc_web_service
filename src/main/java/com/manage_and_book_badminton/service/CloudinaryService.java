@@ -34,12 +34,8 @@ public class CloudinaryService {
                     "api_key", apiKey,
                     "api_secret", apiSecret));
                     
-            // We use dummy url if we don't have real valid cloudinary credentials
-            // For real integration, we uncomment the below line:
-            // Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            // return uploadResult.get("url").toString();
-            
-            return "https://res.cloudinary.com/demo/image/upload/sample.jpg";
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            return uploadResult.get("url").toString();
             
         } catch (Exception e) {
             throw new RuntimeException("Cloud storage service is temporarily unavailable. Please try again later.");
